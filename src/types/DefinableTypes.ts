@@ -1,0 +1,1 @@
+export type DefinableData = Record<string, unknown>
