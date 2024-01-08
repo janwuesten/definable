@@ -24,7 +24,7 @@ export abstract class Definable {
     await Promise.all(this._propDefinitions.map(async (definition) => {
       if (definition._deserializer) {
         if (definition._propertieName in data) {
-          await definition._deserializer(data[definition._propertieName])
+          await definition._deserialize(data[definition._propertieName])
         } else {
           await definition._deserializer(null)
         }
@@ -36,7 +36,7 @@ export abstract class Definable {
     const data: DefinableData = {}
     await Promise.all(this._propDefinitions.map(async (definition) => {
       if (definition._serializer) {
-        data[definition._propertieName] = await definition._serializer()
+        data[definition._propertieName] = await definition._serialize()
       }
     }))
     return data

@@ -1,5 +1,5 @@
 import { expect, test } from "@jest/globals"
-import { Definable, DefinableData, DefinableDefinition, useDefinableArray, useDefinableMap } from "../src"
+import { Definable, DefinableDefinition } from "../src"
 
 class Mayor extends Definable {
   firstName: string = ""
@@ -43,14 +43,17 @@ class Country extends Definable {
       .useDeserializer<string>((data) => this.name = data ?? "")
       .useSerializer<string>(() => this.name)
     useProp("cities")
-      .useDeserializer<DefinableData[]>(async (data) => this.cities = await useDefinableArray().deserialize(data, () => new City()))
-      .useSerializer<DefinableData[]>(async () => await useDefinableArray().serialize(this.cities))
+      .useDefinableArray(() => new City())
+      .useDeserializer<City[]>(async (data) => this.cities = data ?? [])
+      .useSerializer<City[]>(async () => this.cities)
     useProp("mayor")
-      .useDeserializer<DefinableData>(async (data) => await new Mayor().deserialize(data ?? {}))
-      .useSerializer<DefinableData>(async () => await this.mayor.serialize())
+      .useDefinable(() => new Mayor())
+      .useDeserializer<Mayor>(async (data) => this.mayor = data ?? new Mayor())
+      .useSerializer<Mayor>(async () => await this.mayor)
     useProp("manager")
-      .useDeserializer<Record<string, DefinableData>>(async (data) => this.manager = await useDefinableMap().deserialize(data, () => new Manager()))
-      .useSerializer<Record<string, DefinableData>>(async () => await useDefinableMap().serialize(this.manager))
+      .useDefinableMap(() => new Manager())
+      .useDeserializer<Map<string, Manager>>(async (data) => this.manager = data ?? new Map())
+      .useSerializer<Map<string, Manager>>(async () => this.manager)
   }
 }
 
@@ -71,7 +74,7 @@ test("basic toData()", async () => {
 })
 test("basic fromData()", async () => {
   const country = new Country()
-  await country.deserialize({ name: "TEST", cities: [{ name: "Test City" }], manager: { "test-id": { admin: true }} })
+  await country.deserialize({ name: "TEST", cities: [{ name: "Test City" }], mayor: { firstName: "Test", lastName: "Teest 2" }, manager: { "test-id": { admin: true }} })
   expect(country.name).toBe("TEST")
   expect(country.cities.length).toBe(1)
   expect(country.cities[0].name).toBe("Test City")
