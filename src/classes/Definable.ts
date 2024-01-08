@@ -1,5 +1,5 @@
-import { DefinableData } from "../types/DefinableTypes"
 import { DefinableProp } from "./DefinableProp"
+import { DefinableData } from "../types/DefinableData"
 
 export type DefinableDefinitionDefine = (field: string) => DefinableProp
 export type DefinableDefinition = {

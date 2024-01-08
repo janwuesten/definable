@@ -1,5 +1,5 @@
-import { Definable } from "../classes/Definable";
-import { DefinableData } from "../types/DefinableTypes";
+import { Definable } from "../classes/Definable"
+import { DefinableData } from "../types/DefinableData"
 
 export const useDefinableMap = () => {
   return {

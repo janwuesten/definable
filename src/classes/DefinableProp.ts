@@ -1,14 +1,15 @@
-import { DefinableData } from "../types/DefinableTypes"
 import { Definable } from "./Definable"
+import { DefinableData } from "../types/DefinableData"
 
 export type DefinablePropDeserializer<T> = ((data: T | null) => void) | ((data: T | null) => Promise<void>)
 export type DefinablePropSerializer<T> = (() => T) | (() => Promise<T>)
+export type DefinablePropParserType = "definable" | "map" | "array"
 
 export class DefinablePropParser<T extends Definable> {
   construct: (data: DefinableData) => T
-  type: "definable" | "map" | "array" = "array"
+  type: DefinablePropParserType = "array"
 
-  constructor(type: "definable" | "map" | "array", construct: (data: DefinableData) => T) {
+  constructor(type: DefinablePropParserType, construct: (data: DefinableData) => T) {
     this.type = type
     this.construct = construct
   }
