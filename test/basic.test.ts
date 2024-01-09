@@ -57,7 +57,7 @@ class Country extends Definable {
   }
 }
 
-test("basic toData()", async () => {
+test("basic serialize", async () => {
   const country = new Country()
   country.name = "TEST"
   const myCity = new City()
@@ -72,7 +72,7 @@ test("basic toData()", async () => {
   expect(data.manager["test-id"].admin).toBe(false)
   expect(data.manager["test-id-2"].admin).toBe(false)
 })
-test("basic fromData()", async () => {
+test("basic deserialize", async () => {
   const country = new Country()
   await country.deserialize({ name: "TEST", cities: [{ name: "Test City" }], mayor: { firstName: "Test", lastName: "Teest 2" }, manager: { "test-id": { admin: true }} })
   expect(country.name).toBe("TEST")
