@@ -21,7 +21,7 @@ export abstract class Definable {
   abstract definition({ useProp }: DefinableDefinition): void
   
   deserialize(data: DefinableData): this {
-    this._propDefinitions.map((definition) => {
+    for (const definition of this._propDefinitions) {
       if (definition._deserializer) {
         if (definition._propertieName in data) {
           definition._deserialize(data[definition._propertieName])
@@ -29,16 +29,16 @@ export abstract class Definable {
           definition._deserializer(null)
         }
       }
-    })
+    }
     return this
   }
   serialize(): DefinableData {
     const data: DefinableData = {}
-    this._propDefinitions.map((definition) => {
+    for (const definition of this._propDefinitions) {
       if (definition._serializer) {
         data[definition._propertieName] = definition._serialize()
       }
-    })
+    }
     return data
   }
 }
