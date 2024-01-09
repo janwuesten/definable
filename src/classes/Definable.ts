@@ -15,7 +15,7 @@ export abstract class Definable {
   constructor() {
     this.definition({
       useProp: (field) => {
-        const _definition = new DefinableProp(field)
+        const _definition = this._propDefinitions.find((a) => a._propertieName == field) ?? new DefinableProp(field)
         this._propDefinitions.push(_definition)
         return _definition
       },
