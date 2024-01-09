@@ -44,16 +44,16 @@ class Country extends Definable {
       .useSerializer<string>(() => this.name)
     useProp("cities")
       .useDefinableArray(() => new City())
-      .useDeserializer<City[]>(async (data) => this.cities = data ?? [])
-      .useSerializer<City[]>(async () => this.cities)
+      .useDeserializer<City[]>((data) => this.cities = data ?? [])
+      .useSerializer<City[]>(() => this.cities)
     useProp("mayor")
       .useDefinable(() => new Mayor())
-      .useDeserializer<Mayor>(async (data) => this.mayor = data ?? new Mayor())
-      .useSerializer<Mayor>(async () => await this.mayor)
+      .useDeserializer<Mayor>((data) => this.mayor = data ?? new Mayor())
+      .useSerializer<Mayor>(() => this.mayor)
     useProp("manager")
       .useDefinableMap(() => new Manager())
-      .useDeserializer<Map<string, Manager>>(async (data) => this.manager = data ?? new Map())
-      .useSerializer<Map<string, Manager>>(async () => this.manager)
+      .useDeserializer<Map<string, Manager>>((data) => this.manager = data ?? new Map())
+      .useSerializer<Map<string, Manager>>(() => this.manager)
   }
 }
 
