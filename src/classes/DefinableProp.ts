@@ -1,8 +1,8 @@
 import { Definable } from "./Definable"
 import { DefinableData } from "../types/DefinableData"
 
-export type DefinablePropDeserializer<T> = ((data: T | null) => void) | ((data: T | null) => Promise<void>)
-export type DefinablePropSerializer<T> = (() => T) | (() => Promise<T>)
+export type DefinablePropDeserializer<T> = (data: T | null) => void
+export type DefinablePropSerializer<T> = (() => T)
 export type DefinablePropParserType = "definable" | "map" | "array"
 
 export class DefinablePropParser<T extends Definable> {
@@ -55,12 +55,12 @@ export class DefinableProp {
     return this
   }
 
-  async _serialize(): Promise<any> {
+  _serialize(): any {
     if (!this.__serializer) {
       return
     }
     if (this.__parser) {
-      const data = await this.__serializer()
+      const data = this.__serializer()
       switch (this.__parser.type) {
         case "definable":
           if (typeof data != "object" || typeof data.serialize != "function") {
@@ -76,7 +76,7 @@ export class DefinableProp {
             if (typeof item.serialize != "function") {
               throw new Error(`field ${this.__propertieName} is not an object of a Definable class`)
             }
-            items.push(await item.serialize())
+            items.push(item.serialize())
           }
           return items
         case "map":
@@ -88,7 +88,7 @@ export class DefinableProp {
             if (typeof val.serialize != "function") {
               throw new Error(`field ${this.__propertieName} is not an object of a Definable class`)
             }
-            map[key] = await val.serialize()
+            map[key] = val.serialize()
           }
           return map
         default:
@@ -98,7 +98,7 @@ export class DefinableProp {
       return this.__serializer()
     }
   }
-  async _deserialize(data: any | null): Promise<void> {
+  _deserialize(data: any | null): void {
     if (!this.__deserializer) {
       return
     }
@@ -108,7 +108,7 @@ export class DefinableProp {
           if (typeof data != "object") {
             throw new Error(`field ${this.__propertieName} is not an object of a Definable class`)
           }
-          return this.__deserializer(await this.__parser.construct(data).deserialize(data as DefinableData))
+          return this.__deserializer(this.__parser.construct(data).deserialize(data as DefinableData))
         case "array":
           if (!Array.isArray(data)) {
             throw new Error(`field ${this.__propertieName} is not an array of a Definable class`)
@@ -118,7 +118,7 @@ export class DefinableProp {
             if (typeof item != "object") {
               throw new Error(`field ${this.__propertieName} is not an object of a Definable class`)
             }
-            items.push(await this.__parser.construct(item).deserialize(item))
+            items.push(this.__parser.construct(item).deserialize(item))
           }
           return this.__deserializer(items)
         case "map":
@@ -130,7 +130,7 @@ export class DefinableProp {
             if (typeof val != "object") {
               throw new Error(`field ${this.__propertieName} is not an object of a Definable class`)
             }
-            map.set(key, await this.__parser.construct(val).deserialize(val))
+            map.set(key, this.__parser.construct(val).deserialize(val))
           }
           return this.__deserializer(map)
         default:

@@ -20,25 +20,25 @@ export abstract class Definable {
 
   abstract definition({ useProp }: DefinableDefinition): void
   
-  async deserialize(data: DefinableData): Promise<this> {
-    await Promise.all(this._propDefinitions.map(async (definition) => {
+  deserialize(data: DefinableData): this {
+    this._propDefinitions.map((definition) => {
       if (definition._deserializer) {
         if (definition._propertieName in data) {
-          await definition._deserialize(data[definition._propertieName])
+          definition._deserialize(data[definition._propertieName])
         } else {
-          await definition._deserializer(null)
+          definition._deserializer(null)
         }
       }
-    }))
+    })
     return this
   }
-  async serialize(): Promise<DefinableData> {
+  serialize(): DefinableData {
     const data: DefinableData = {}
-    await Promise.all(this._propDefinitions.map(async (definition) => {
+    this._propDefinitions.map((definition) => {
       if (definition._serializer) {
-        data[definition._propertieName] = await definition._serialize()
+        data[definition._propertieName] = definition._serialize()
       }
-    }))
+    })
     return data
   }
 }
