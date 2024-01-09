@@ -30,7 +30,7 @@ export abstract class Definable {
   abstract definition({ useProp }: DefinableDefinition): void
   
   deserialize(data: DefinableData): this {
-    const beforeEvents = this._propEvents.filter((event) => event._eventName == "deserialize:before")
+    const beforeEvents = this._propEvents.filter((event) => event._eventName == "deserialize.before")
     for (const event of beforeEvents) {
       event._listener()
     }
@@ -43,14 +43,14 @@ export abstract class Definable {
         }
       }
     }
-    const afterEvents = this._propEvents.filter((event) => event._eventName == "deserialize:after")
+    const afterEvents = this._propEvents.filter((event) => event._eventName == "deserialize.after")
     for (const event of afterEvents) {
       event._listener()
     }
     return this
   }
   serialize(): DefinableData {
-    const beforeEvents = this._propEvents.filter((event) => event._eventName == "serialize:before")
+    const beforeEvents = this._propEvents.filter((event) => event._eventName == "serialize.before")
     for (const event of beforeEvents) {
       event._listener()
     }
@@ -60,7 +60,7 @@ export abstract class Definable {
         data[definition._propertieName] = definition._serialize()
       }
     }
-    const afterEvents = this._propEvents.filter((event) => event._eventName == "serialize:after")
+    const afterEvents = this._propEvents.filter((event) => event._eventName == "serialize.after")
     for (const event of afterEvents) {
       event._listener()
     }

@@ -1,4 +1,4 @@
-export type DefinableEventName = "deserialize:before" | "deserialize:after" | "serialize:before" | "serialize:after"
+export type DefinableEventName = "deserialize.before" | "deserialize.after" | "serialize.before" | "serialize.after"
 export type DefinableEventListener = () => void
 export class DefinableEvent {
   private __eventName: DefinableEventName
