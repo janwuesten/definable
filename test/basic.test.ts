@@ -17,7 +17,7 @@ class Mayor extends Definable {
 class City extends Definable {
   name: string = ""
 
-  definition({ useProp, useEvent }: DefinableDefinition): void {
+  definition({ useProp }: DefinableDefinition): void {
     useProp("name")
       .useDeserializer<string>((data) => this.name = data ?? "")
       .useSerializer<string>(() => this.name)
