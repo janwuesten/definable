@@ -5,7 +5,7 @@ class Mayor extends Definable {
   firstName: string = ""
   lastName: string = ""
 
-  definition({ useProp, useEvent }: DefinableDefinition): void {
+  definition({ useProp }: DefinableDefinition): void {
     useProp("firstName")
       .useDeserializer<string>((data) => this.firstName = data ?? "")
       .useSerializer<string>(() => this.firstName)
