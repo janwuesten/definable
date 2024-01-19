@@ -1,0 +1,56 @@
+---
+sidebar_position: 2
+---
+
+# Serialize
+
+For this documentation page the following `Definable` class will be used:
+```ts
+import { Definable, DefinableDefinition } from "definable"
+
+class Country extends Definable {
+  name: string = "Germany"
+  code: string = "DE"
+  population: number = 83200000
+
+  definition({ useProp }: DefinableDefinition): void {
+    useProp("name")
+      .useDeserializer<string>((data) => this.name = data ?? "")
+      .useSerializer<string>(() => this.name)
+    useProp("code")
+      .useDeserializer<string>((data) => this.code = data ?? "")
+      .useSerializer<string>(() => this.code)
+    useProp("population")
+      .useDeserializer<number>((data) => this.population = data ?? "")
+      .useSerializer<number>(() => this.population)
+  }
+}
+```
+
+## Basic serialization
+
+Basic serialization can be done with the `serialize()` method that every `Definable` has.
+This will serialize all properties to a single JSON data object.
+
+```ts
+const country = new County()
+const data = country.serialize()
+// data = { name: "Germany", code: "DE", population: 83200000 }
+```
+
+## Advanced serialization
+
+You can parse some options to the `serialize()` method to change the behavior of the serialized JSON data.
+
+### Serialize only certain properties
+
+Sometimes (especially when working with databases like the Google Firebase Firestore) serializing the whole `Definable` class isn't the ideal solution.
+You can pass an array of property names (`string`) to the `props` option to serialize only certain properties. Note that this also only [validates](/definable/docs/definable/validation) those properties.
+
+```ts
+const country = new County()
+const data = country.serialize({
+  props: ["code", "population"]
+})
+// data = { code: "DE", population: 83200000 }
+```

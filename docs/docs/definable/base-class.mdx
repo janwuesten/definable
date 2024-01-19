@@ -1,0 +1,85 @@
+---
+sidebar_position: 0
+---
+
+# Base class
+
+## Define your first Definable class
+
+To define your first Definable class, create a class that extends the `Definable` class and implement the `definition` method.
+The `definition` method acts like a constructor that is used to define your serialization and deserialization steps.
+Within this method you can define props and events, define how your props are serialized and deserialized and if and how your props are validated.
+
+```ts
+import { Definable, DefinableDefinition } from "definable"
+
+class MyFirstClass extends Definable {  
+  definition({}: DefinableDefinition): void {
+
+  }
+}
+```
+
+Now add your first property. This can be done the way you would normally define a property for your class.
+
+```ts
+import { Definable, DefinableDefinition } from "definable"
+
+class MyFirstClass extends Definable {  
+  //highlight-start
+  myFirstProperty: string = ""
+  //highlight-end
+
+  definition({}: DefinableDefinition): void {
+
+  }
+}
+```
+
+To define that the prop is used for serialization and / or deserialization you need to define the prop within the `definition` method.
+
+```ts
+import { Definable, DefinableDefinition } from "definable"
+
+class MyFirstClass extends Definable {  
+  myFirstProperty: string = ""
+  
+  //highlight-start
+  definition({ useProp }: DefinableDefinition): void {
+    useProp("myFirstProperty")
+  }
+  //highlight-end
+}
+```
+
+This alone will not serialize or deserialize your prop. To define that the prop will be serialized or deserialized you need to define a serializer (`useSerializer`) or deserializer (`useDeserializer`).
+You do not need to define a deserializer or serializer if you do not want the prop to be serialized or deserialized, for example for read-only values you would only define a deserializer.
+
+Note that when using a deserializer with `useDeserializer` the provided type (in this case `string`) will also allow `null` as a property might not be defined in the JSON data.
+So defining a default value with `??` (or any other way like a if statement) is required.
+```ts
+import { Definable, DefinableDefinition } from "definable"
+
+class MyFirstClass extends Definable {  
+  myFirstProperty: string = ""
+
+  definition({ useProp }: DefinableDefinition): void {
+    useProp("myFirstProperty")
+    //highlight-start
+      .useSerializer<string>(() => this.myFirstProperty)
+      // data will have the type "string | null"
+      .useDeserializer<string>((data) => this.myFirstProperty = data ?? "")
+    //highlight-end
+  }
+  
+}
+```
+
+You now have your first Definable class that can be serialized and deserialized! To serialize or deserialize your class use the `serialize` or `deserialize` methods.
+
+```ts
+const myClass = new MyFirstClass()
+myClass.deserialize({ myFirstProperty: "Hello world!" })
+
+const data = myClass.serialize()
+```

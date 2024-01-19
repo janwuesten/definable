@@ -1,0 +1,101 @@
+---
+sidebar_position: 2
+---
+
+# Validation
+
+## Benefits
+
+By using a validator, you ensure that only valid classes can be serialized and check whether your class is valid or not.
+
+The benefits of validating you properties inside your class are simple:
+- you do not need to write your validation syntax multiple times
+- you can't forget to validate your properties when serializing your class
+- your validation logic can be found easily and is structured within your class
+
+## Define a validator
+
+This `Country` class provide no validation. This means, that when using `serialize` invalid data may be serialized or deserialized.
+
+```ts
+import { Definable, DefinableDefinition } from "definable"
+
+class Country extends Definable {
+  code: string = ""
+
+  definition({ useProp }: DefinableDefinition): void {
+    useProp("code")
+      .useDeserializer<string>((data) => this.code = data ?? "")
+      .useSerializer<string>(() => this.code)
+  }
+}
+```
+
+To ensure that the property `code` is set and contains exact two letters we add a validation with the `useValidator` method for the propertie.
+To use the `useValidator` method, provide a method that returns `null` if the property is valid (`null` error) or a `string` with a error code / error description if the property is invalid.
+
+```ts
+import { Definable, DefinableDefinition } from "definable"
+
+class Country extends Definable {
+  code: string = ""
+
+  definition({ useProp }: DefinableDefinition): void {
+    useProp("code")
+      //highlight-start
+      .useValidator(() => {
+        if (!this.code) {
+          return "not-set"
+        }
+        if (this.code.length != 2) {
+          return "invalid-length"
+        }
+        return null
+      })
+      //highlight-end
+      .useDeserializer<string>((data) => this.code = data ?? "")
+      .useSerializer<string>(() => this.code)
+  }
+}
+```
+
+## Validate before serialization
+
+Now catch the error when using the `serialize` method and output the right response to the user.
+
+```ts
+const country = new County()
+const valid = country.validate()
+if (!valid.valid) {
+  const propName = valid.prop
+  const errorCode = valid.code
+  console.log(`Oh no, the property ${propName} is invalid! code: ${errorCode}`)
+  return
+}
+const data = country.serialize()
+```
+:::note
+This validating method will stop once a property is invalid and will return the information of the first invalid property.
+If multiple properties are invalid, the `validate` method will only return one failing property.
+:::
+
+
+## Validate single / certain properties
+
+Sometimes you don't want to validate the whole class but rather one or multiple properties, for example when designing a form with the requirement to display error messages when editing an input field.
+
+This can be done by providing an array of property names (`string`) to the `validate` method.
+```ts
+const country = new County()
+const valid = country.validate(["code"])
+if (!valid.valid) {
+  const propName = valid.prop
+  const errorCode = valid.code
+  console.log(`Oh no, the property ${propName} is invalid! code: ${errorCode}`)
+  return
+}
+```
+:::note
+This validating method will stop once a property is invalid and will return the information of the first invalid property.
+If multiple properties are invalid, the `validate` method will only return one failing property.
+:::
