@@ -21,7 +21,7 @@ class Country extends Definable {
       .useDeserializer<string>((data) => this.code = data ?? "")
       .useSerializer<string>(() => this.code)
     useProp("population")
-      .useDeserializer<number>((data) => this.population = data ?? "")
+      .useDeserializer<number>((data) => this.population = data ?? 0)
       .useSerializer<number>(() => this.population)
   }
 }
