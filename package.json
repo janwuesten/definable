@@ -17,7 +17,19 @@
   "bugs": {
     "url": "https://github.com/janwuesten/definable/issues"
   },
-  "keywords": [],
+  "keywords": [
+    "definable",
+    "json",
+    "serialize",
+    "serialitation",
+    "deserialize",
+    "deserialization",
+    "valiate",
+    "validation",
+    "class",
+    "pattern",
+    "typescript"
+  ],
   "devDependencies": {
     "jest": "^29.7.0",
     "ts-jest": "^29.1.1",
