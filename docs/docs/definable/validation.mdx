@@ -58,10 +58,14 @@ class Country extends Definable {
   }
 }
 ```
+:::warning
+When using `serialize` without checking if the class if valid the `serialize` method will throw an error. Please read the documentation further to understand how to properly valid a class.
+Of couse you can also try and catch the error when using `serialize` but the usage of proper validation is recommended.
+:::
 
 ## Validate before serialization
 
-Now catch the error when using the `serialize` method and output the right response to the user.
+You can use the `validate` method before the `serialize` method to check whether the class is valid or not.
 
 ```ts
 const country = new County()
