@@ -4,7 +4,7 @@ import type * as Preset from "@docusaurus/preset-classic"
 
 const config: Config = {
   title: "Definable",
-  tagline: "Easily define and structure your Firebase Firestore database project with TypeScript classes.",
+  tagline: "Easily define your TypeScript class structure for serializing and deserializing JSON data to work with services and databases",
   favicon: "img/favicon.ico",
   url: "https://your-docusaurus-site.example.com",
   baseUrl: "/definable/",
