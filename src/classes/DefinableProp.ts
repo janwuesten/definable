@@ -3,7 +3,12 @@ import { DefinableData } from "../types/DefinableData"
 
 export type DefinablePropDeserializer<T> = (data: T | null) => void
 export type DefinablePropSerializer<T> = (() => T)
+export type DefinablePropValidator = (() => string | null)
 export type DefinablePropParserType = "definable" | "map" | "array"
+export type DefinablePropValidateResponse = {} & (
+  | { valid: true }
+  | { valid: false, code: string }
+)
 
 export class DefinablePropParser<T extends Definable> {
   construct: (data: DefinableData) => T
@@ -17,6 +22,7 @@ export class DefinablePropParser<T extends Definable> {
 export class DefinableProp {
   private __propertieName: string
   private __serializer: DefinablePropSerializer<any> | null = null
+  private __validator: DefinablePropValidator | null = null
   private __deserializer: DefinablePropDeserializer<any> | null = null
   private __parser: DefinablePropParser<Definable> | null = null
 
@@ -30,6 +36,11 @@ export class DefinableProp {
   }
   useDeserializer<T>(deserializer: DefinablePropDeserializer<T>) {
     this.__deserializer = deserializer
+    return this
+  }
+
+  useValidator(validator: DefinablePropValidator) {
+    this.__validator = validator
     return this
   }
 
@@ -55,6 +66,23 @@ export class DefinableProp {
     return this
   }
 
+  _validate(): DefinablePropValidateResponse {
+    if (!this.__validator) {
+      return {
+        valid: true
+      }
+    }
+    const response = this.__validator()
+    if (response == null) {
+      return {
+        valid: true
+      }
+    }
+    return {
+      valid: false,
+      code: response
+    }
+  }
   _serialize(): any {
     if (!this.__serializer) {
       return

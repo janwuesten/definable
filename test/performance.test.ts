@@ -22,7 +22,11 @@ class Country extends Definable {
   definition({ useProp }: DefinableDefinition): void {
     useProp("name")
       .useDeserializer<string>((data) => this.name = data ?? "")
-      .useSerializer<string>(() => this.name)
+      .useSerializer<string>(() => {
+        if (!this.name)
+          throw new Error("name cannot be empty")
+        return this.name
+      })
     useProp("code")
       .useDeserializer<string>((data) => this.code = data ?? "")
       .useSerializer<string>(() => this.code)
@@ -32,10 +36,49 @@ class Country extends Definable {
       .useSerializer<City[]>(() => this.cities)
   }
 }
+class NativeCity {
+  name: string = ""
 
-const executions = 1000
+  serialize(): Record<string, unknown> {
+    return {
+      name: this.name
+    }
+  }
+  deserialize(data: Record<string, unknown>) {
+    this.name = data.name as string ?? ""
+    return this
+  }
+}
+class NativeCountry {
+  name: string = ""
+  code: string = ""
+  cities: NativeCity[] = []
 
-test("DocumentClass write", async () => {
+ serialize(): Record<string, unknown> {
+    const cities: Record<string, unknown>[] = []
+    for (const city of this.cities) {
+      cities.push(city.serialize())
+    }
+    return {
+      name: this.name,
+      code: this.code,
+      cities: cities
+    }
+  }
+  deserialize(data: Record<string, unknown>) {
+    this.name = data.name as string ?? ""
+    this.code = data.code as string ?? ""
+    this.cities = []
+    for (const city of data.cities as Record<string, unknown>[]) {
+      this.cities.push(new NativeCity().deserialize(city))
+    }
+    return this
+  }
+}
+
+const executions = 10000
+
+test("Definable write", async () => {
   const totalStartMillis = new Date().getTime()
   let average = 0
   for (let i = 0; i < executions; i++) {
@@ -50,9 +93,9 @@ test("DocumentClass write", async () => {
   }
   average = average / executions
   const totalEndMillis = new Date().getTime()
-  console.log(`[DocumentClass write]: total ${(totalEndMillis - totalStartMillis)}ms, average ${average}ms`)
+  console.log(`[Definable write]: total ${(totalEndMillis - totalStartMillis)}ms, average ${average}ms`)
 })
-test("DocumentClass read", async () => {
+test("Definable read", async () => {
   const totalStartMillis = new Date().getTime()
   let average = 0
   for (let i = 0; i < executions; i++) {
@@ -72,9 +115,48 @@ test("DocumentClass read", async () => {
   }
   average = average / executions
   const totalEndMillis = new Date().getTime()
-  console.log(`[DocumentClass read]: total ${(totalEndMillis - totalStartMillis)}ms, average ${average}ms`)
+  console.log(`[Definable read]: total ${(totalEndMillis - totalStartMillis)}ms, average ${average}ms`)
 })
-test("native", async () => {
+test("Native class write", async () => {
+  const totalStartMillis = new Date().getTime()
+  let average = 0
+  for (let i = 0; i < executions; i++) {
+    const startMillis = new Date().getTime()
+    const country = new NativeCountry()
+    country.code = "DK"
+    country.name = "Denmark"
+    await country.serialize()
+    const endMillis = new Date().getTime()
+    const totalMillis = endMillis - startMillis
+    average += totalMillis
+  }
+  average = average / executions
+  const totalEndMillis = new Date().getTime()
+  console.log(`[Native class write]: total ${(totalEndMillis - totalStartMillis)}ms, average ${average}ms`)
+})
+test("Native class read", async () => {
+  const totalStartMillis = new Date().getTime()
+  let average = 0
+  for (let i = 0; i < executions; i++) {
+    const startMillis = new Date().getTime()
+    const country = new NativeCountry()
+    await country.deserialize({
+      name: "Denmark",
+      code: "DK",
+      cities: [
+        { name: "Kopenhagen" },
+        { name: "Aalborg" }
+      ]
+    })
+    const endMillis = new Date().getTime()
+    const totalMillis = endMillis - startMillis
+    average += totalMillis
+  }
+  average = average / executions
+  const totalEndMillis = new Date().getTime()
+  console.log(`[Native class read]: total ${(totalEndMillis - totalStartMillis)}ms, average ${average}ms`)
+})
+test("classless", async () => {
   const totalStartMillis = new Date().getTime()
   let average = 0
   for (let i = 0; i < executions; i++) {
