@@ -33,6 +33,8 @@ jobs:
         run: npm ci
       - name: Build typescript
         run: npm run build
+      - name: Cleanup npm package
+        run: rm -rf docs
       - name: Publish Node.js package
         run: npm publish --access=public
         env:
