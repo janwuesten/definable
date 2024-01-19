@@ -12,6 +12,11 @@ To install Definable simple use the Node package manager of your choice to insta
 
 `npm i definable`
 
+## Documentation
+
+You can find a documentation here:
+https://janwuesten.github.io/definable/
+
 ## Usage example
 
 ```ts
