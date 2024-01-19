@@ -89,7 +89,7 @@ const config: Config = {
             },
             {
               label: "NPM",
-              href: "https://www.npmjs.com/package/@janwuesten/definable",
+              href: "https://www.npmjs.com/package/definable",
             }
           ],
         },
