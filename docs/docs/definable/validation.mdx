@@ -23,8 +23,8 @@ import { Definable, DefinableDefinition } from "definable"
 class Country extends Definable {
   code: string = ""
 
-  definition({ useProp }: DefinableDefinition): void {
-    useProp("code")
+  definition({ prop }: DefinableDefinition): void {
+    prop("code")
       .useDeserializer<string>((data) => this.code = data ?? "")
       .useSerializer<string>(() => this.code)
   }
@@ -40,8 +40,8 @@ import { Definable, DefinableDefinition } from "definable"
 class Country extends Definable {
   code: string = ""
 
-  definition({ useProp }: DefinableDefinition): void {
-    useProp("code")
+  definition({ prop }: DefinableDefinition): void {
+    prop("code")
       //highlight-start
       .useValidator(() => {
         if (!this.code) {

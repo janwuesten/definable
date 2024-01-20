@@ -3,10 +3,10 @@ import { DefinableData } from "../types/DefinableData"
 import { DefinableEvent, DefinableEventListener, DefinableEventName } from "./DefinableEvent"
 
 export type DefinableDefinitionUseDefine = (field: string) => DefinableProp
-export type DefinableDefinitionUseEvent = (event: DefinableEventName, listener: DefinableEventListener) => DefinableEvent
+export type DefinableDefinitionevent = (event: DefinableEventName, listener: DefinableEventListener) => DefinableEvent
 export type DefinableDefinition = {
-  useProp: DefinableDefinitionUseDefine
-  useEvent: DefinableDefinitionUseEvent
+  prop: DefinableDefinitionUseDefine
+  event: DefinableDefinitionevent
 }
 interface SerializeDeserializeOptions {
   props?: string[]
@@ -27,12 +27,12 @@ export abstract class Definable {
   
   constructor() {
     this.definition({
-      useProp: (field) => {
+      prop: (field) => {
         const _definition = this._propDefinitions.find((a) => a._propertieName == field) ?? new DefinableProp(field)
         this._propDefinitions.push(_definition)
         return _definition
       },
-      useEvent: (event, listener) => {
+      event: (event, listener) => {
         const _event = new DefinableEvent(event, listener)
         this._propEvents.push(_event)
         return _event
@@ -40,7 +40,7 @@ export abstract class Definable {
     })
   }
 
-  abstract definition({ useProp }: DefinableDefinition): void
+  abstract definition({ prop }: DefinableDefinition): void
   
   validate(props?: string[]): DefinableValidateResponse {
     for (const definition of this._propDefinitions) {

@@ -19,11 +19,11 @@ class Country extends Definable {
   name: string = ""
   countryCode: string = ""
 
-  definition({ useProp }: DefinableDefinition): void {
-    useProp("name")
+  definition({ prop }: DefinableDefinition): void {
+    prop("name")
       .useDeserializer<string>((data) => this.name = data ?? "")
       .useSerializer<string>(() => this.name)
-    useProp("countryCode")
+    prop("countryCode")
       .useDeserializer<string>((data) => this.countryCode = data ?? "")
       .useSerializer<string>(() => this.countryCode)
   }
@@ -125,8 +125,8 @@ class City extends Definable {
     super()
   }
 
-  definition({ useProp }: DefinableDefinition): void {
-    useProp("name")
+  definition({ prop }: DefinableDefinition): void {
+    prop("name")
       .useDeserializer<string>((data) => this.name = data ?? "")
       .useSerializer<string>(() => this.name)
   }
@@ -139,8 +139,8 @@ class Country extends Definable {
   cities: City[] = []
   // highlight-end
 
-  definition({ useProp }: DefinableDefinition): void {
-    useProp("name")
+  definition({ prop }: DefinableDefinition): void {
+    prop("name")
       .useDeserializer<string>((data) => this.name = data ?? "")
       .useSerializer<string>(() => {
         // highlight-start
@@ -149,11 +149,11 @@ class Country extends Definable {
         // highlight-end
         return this.name
       })
-    useProp("code")
+    prop("code")
       .useDeserializer<string>((data) => this.code = data ?? "")
       .useSerializer<string>(() => this.code)
     // highlight-start
-    useProp("cities")
+    prop("cities")
       .useDefinableArray(() => new City())
       .useDeserializer<City[]>((data) => this.cities = data ?? [])
       .useSerializer<City[]>(() => this.cities)

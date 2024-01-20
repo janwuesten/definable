@@ -5,11 +5,11 @@ class Mayor extends Definable {
   firstName: string = ""
   lastName: string = ""
 
-  definition({ useProp }: DefinableDefinition): void {
-    useProp("firstName")
+  definition({ prop, event }: DefinableDefinition): void {
+    prop("firstName")
       .useDeserializer<string>((data) => this.firstName = data ?? "")
       .useSerializer<string>(() => this.firstName)
-    useProp("lastName")
+    prop("lastName")
       .useDeserializer<string>((data) => this.lastName = data ?? "")
       .useSerializer<string>(() => this.lastName)
   }
@@ -17,8 +17,8 @@ class Mayor extends Definable {
 class City extends Definable {
   name: string = ""
 
-  definition({ useProp }: DefinableDefinition): void {
-    useProp("name")
+  definition({ prop }: DefinableDefinition): void {
+    prop("name")
       .useDeserializer<string>((data) => this.name = data ?? "")
       .useSerializer<string>(() => this.name)
   }
@@ -26,8 +26,8 @@ class City extends Definable {
 class Manager extends Definable {
   admin: boolean = false
 
-  definition({ useProp }: DefinableDefinition): void {
-    useProp("admin")
+  definition({ prop }: DefinableDefinition): void {
+    prop("admin")
       .useDeserializer<boolean>((data) => this.admin = data ?? false)
       .useSerializer<boolean>(() => this.admin)
   }
@@ -38,19 +38,19 @@ class Country extends Definable {
   mayor: Mayor = new Mayor()
   manager: Map<string, Manager> = new Map()
 
-  definition({ useProp }: DefinableDefinition): void {
-    useProp("name")
+  definition({ prop }: DefinableDefinition): void {
+    prop("name")
       .useDeserializer<string>((data) => this.name = data ?? "")
       .useSerializer<string>(() => this.name)
-    useProp("cities")
+    prop("cities")
       .useDefinableArray(() => new City())
       .useDeserializer<City[]>((data) => this.cities = data ?? [])
       .useSerializer<City[]>(() => this.cities)
-    useProp("mayor")
+    prop("mayor")
       .useDefinable(() => new Mayor())
       .useDeserializer<Mayor>((data) => this.mayor = data ?? new Mayor())
       .useSerializer<Mayor>(() => this.mayor)
-    useProp("manager")
+    prop("manager")
       .useDefinableMap(() => new Manager())
       .useDeserializer<Map<string, Manager>>((data) => this.manager = data ?? new Map())
       .useSerializer<Map<string, Manager>>(() => this.manager)

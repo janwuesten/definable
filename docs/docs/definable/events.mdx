@@ -21,7 +21,7 @@ When using a [validator](/definable/docs/definable/validation) with `useValidato
 
 ## Defining an event
 
-To define an event use the `useEvent` definer within your `definition` method.
+To define an event use the `event` definer within your `definition` method.
 
 ```ts
 import { Definable, DefinableDefinition } from "definable"
@@ -30,13 +30,13 @@ class MyFirstClass extends Definable {
   myFirstProperty: string = ""
 
   //highlight-start
-  definition({ useProp, useEvent }: DefinableDefinition): void {
-    useEvent("serialize.before", () => {
+  definition({ prop, event }: DefinableDefinition): void {
+    event("serialize.before", () => {
       // your event action
     })
   //highlight-end
 
-    useProp("myFirstProperty")
+    prop("myFirstProperty")
       .useSerializer<string>(() => this.myFirstProperty)
       // data will have the type "string | null"
       .useDeserializer<string>((data) => this.myFirstProperty = data ?? "")

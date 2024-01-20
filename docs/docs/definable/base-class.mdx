@@ -45,8 +45,8 @@ class MyFirstClass extends Definable {
   myFirstProperty: string = ""
   
   //highlight-start
-  definition({ useProp }: DefinableDefinition): void {
-    useProp("myFirstProperty")
+  definition({ prop }: DefinableDefinition): void {
+    prop("myFirstProperty")
   }
   //highlight-end
 }
@@ -63,8 +63,8 @@ import { Definable, DefinableDefinition } from "definable"
 class MyFirstClass extends Definable {  
   myFirstProperty: string = ""
 
-  definition({ useProp }: DefinableDefinition): void {
-    useProp("myFirstProperty")
+  definition({ prop }: DefinableDefinition): void {
+    prop("myFirstProperty")
     //highlight-start
       .useSerializer<string>(() => this.myFirstProperty)
       // data will have the type "string | null"

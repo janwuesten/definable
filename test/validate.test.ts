@@ -5,11 +5,11 @@ class Country extends Definable {
   name: string = ""
   code: string = ""
 
-  definition({ useProp }: DefinableDefinition): void {
-    useProp("name")
+  definition({ prop }: DefinableDefinition): void {
+    prop("name")
       .useDeserializer<string>((data) => this.name = data ?? "")
       .useSerializer<string>(() => this.name)
-    useProp("code")
+    prop("code")
       .useValidator(() => {
         if (!this.code) {
           return "code-must-be-set"

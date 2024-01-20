@@ -24,11 +24,11 @@ class Country extends Definable {
   name: string = ""
   countryCode: string = ""
 
-  definition({ useProp }: DefinableDefinition): void {
-    useProp("name")
+  definition({ prop }: DefinableDefinition): void {
+    prop("name")
       .useDeserializer<string>((data) => this.name = data ?? "")
       .useSerializer<string>(() => this.name)
-    useProp("countryCode")
+    prop("countryCode")
       .useDeserializer<string>((data) => this.countryCode = data ?? "")
       .useSerializer<string>(() => this.countryCode)
   }

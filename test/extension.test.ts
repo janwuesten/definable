@@ -4,16 +4,16 @@ import { expect, test } from "@jest/globals"
 class BaseClass extends Definable {
   testProp: string = ""
   
-  definition({ useProp }: DefinableDefinition): void {
-    useProp("testProp")
+  definition({ prop }: DefinableDefinition): void {
+    prop("testProp")
       .useSerializer<string>(() => this.testProp)
       .useDeserializer<string>((data) => this.testProp = data ?? "")
   }
 }
 class ExtendedClass extends BaseClass {
-  definition({ useProp, useEvent }: DefinableDefinition): void {
-    super.definition({ useProp, useEvent })
-    useProp("testProp")
+  definition({ prop, event }: DefinableDefinition): void {
+    super.definition({ prop, event })
+    prop("testProp")
       .useSerializer(() => this.testProp.toUpperCase())
   }
 }
