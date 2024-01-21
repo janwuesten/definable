@@ -1,3 +1,4 @@
+export * from "./classes/BaseDefinable"
 export * from "./classes/Definable"
 export * from "./classes/DefinableProp"
 export * from "./types/DefinableData"

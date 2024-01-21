@@ -1,4 +1,4 @@
-import { Definable } from "./Definable"
+import { BaseDefinable } from "./BaseDefinable"
 import { DefinableData } from "../types/DefinableData"
 
 export type DefinablePropDeserializer<T> = (data: T | null) => void
@@ -10,7 +10,7 @@ export type DefinablePropValidateResponse = {} & (
   | { valid: false, code: string }
 )
 
-export class DefinablePropParser<T extends Definable> {
+export class DefinablePropParser<T extends BaseDefinable> {
   construct: (data: DefinableData) => T
   type: DefinablePropParserType = "array"
 
@@ -24,7 +24,7 @@ export class DefinableProp {
   private __serializer: DefinablePropSerializer<any> | null = null
   private __validator: DefinablePropValidator | null = null
   private __deserializer: DefinablePropDeserializer<any> | null = null
-  private __parser: DefinablePropParser<Definable> | null = null
+  private __parser: DefinablePropParser<BaseDefinable> | null = null
 
   constructor(propertieName: string) {
     this.__propertieName = propertieName
@@ -44,21 +44,21 @@ export class DefinableProp {
     return this
   }
 
-  useDefinable<T extends Definable>(constructor: (data: DefinableData) => T) {
+  useDefinable<T extends BaseDefinable>(constructor: (data: DefinableData) => T) {
     if (this.__parser) {
       throw new Error("cannot define multiple parsers")
     }
     this.__parser = new DefinablePropParser("definable", constructor)
     return this
   }
-  useDefinableArray<T extends Definable>(constructor: (data: DefinableData) => T) {
+  useDefinableArray<T extends BaseDefinable>(constructor: (data: DefinableData) => T) {
     if (this.__parser) {
       throw new Error("cannot define multiple parsers")
     }
     this.__parser = new DefinablePropParser("array", constructor)
     return this
   }
-  useDefinableMap<T extends Definable>(constructor: (data: DefinableData) => T) {
+  useDefinableMap<T extends BaseDefinable>(constructor: (data: DefinableData) => T) {
     if (this.__parser) {
       throw new Error("cannot define multiple parsers")
     }
@@ -94,13 +94,13 @@ export class DefinableProp {
           if (typeof data != "object" || typeof data.serialize != "function") {
             throw new Error(`field ${this.__propertieName} is not an object of a Definable class`)
           }
-          return (data as Definable).serialize()
+          return (data as BaseDefinable).serialize()
         case "array":
           if (!Array.isArray(data)) {
             throw new Error(`field ${this.__propertieName} is not an array of a Definable class`)
           }
           const items: DefinableData[] = []
-          for (const item of data as Definable[]) {
+          for (const item of data as BaseDefinable[]) {
             if (typeof item.serialize != "function") {
               throw new Error(`field ${this.__propertieName} is not an object of a Definable class`)
             }
@@ -112,7 +112,7 @@ export class DefinableProp {
             throw new Error(`field ${this.__propertieName} is not an object of a Definable class`)
           }
           const map: Record<string, DefinableData> = {}
-          for (const [key, val] of data as Map<string, Definable>) {
+          for (const [key, val] of data as Map<string, BaseDefinable>) {
             if (typeof val.serialize != "function") {
               throw new Error(`field ${this.__propertieName} is not an object of a Definable class`)
             }
@@ -141,7 +141,7 @@ export class DefinableProp {
           if (!Array.isArray(data)) {
             throw new Error(`field ${this.__propertieName} is not an array of a Definable class`)
           }
-          const items: Definable[] = []
+          const items: BaseDefinable[] = []
           for (const item of data as DefinableData[]) {
             if (typeof item != "object") {
               throw new Error(`field ${this.__propertieName} is not an object of a Definable class`)
@@ -153,7 +153,7 @@ export class DefinableProp {
           if (typeof data != "object") {
             throw new Error(`field ${this.__propertieName} is not an object of a Definable class`)
           }
-          const map: Map<string, Definable> = new Map()
+          const map: Map<string, BaseDefinable> = new Map()
           for (const [key, val] of Object.entries(data as Record<string, DefinableData>)) {
             if (typeof val != "object") {
               throw new Error(`field ${this.__propertieName} is not an object of a Definable class`)

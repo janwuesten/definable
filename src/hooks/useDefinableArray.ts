@@ -1,9 +1,9 @@
-import { Definable } from "../classes/Definable"
+import { BaseDefinable } from "../classes/BaseDefinable"
 import { DefinableData } from "../types/DefinableData"
 
 export const useDefinableArray = () => {
   return {
-    deserialize<T extends Definable>(array: DefinableData[] | null, constructor: () => T) {
+    deserialize<T extends BaseDefinable>(array: DefinableData[] | null, constructor: () => T) {
       const arr: T[] = []
       if (array) {
         for (const data of array) {
@@ -14,7 +14,7 @@ export const useDefinableArray = () => {
       }
       return arr
     },
-    serialize<T extends Definable>(array: T[]) {
+    serialize<T extends BaseDefinable>(array: T[]) {
       const data: DefinableData[] = []
       if (array) {
         for (const item of array) {
