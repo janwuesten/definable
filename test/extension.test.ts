@@ -13,7 +13,7 @@ class BaseClass extends Definable {
 class ExtendedClass extends BaseClass {
   definition({ prop, event }: DefinableDefinition): void {
     super.definition({ prop, event })
-    prop("testProp")
+    prop<string>("testProp")
       .useSerializer(() => this.testProp.toUpperCase())
   }
 }

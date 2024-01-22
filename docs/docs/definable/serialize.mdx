@@ -14,15 +14,15 @@ class Country extends Definable {
   population: number = 83200000
 
   definition({ prop }: DefinableDefinition): void {
-    prop("name")
-      .useDeserializer<string>((data) => this.name = data ?? "")
-      .useSerializer<string>(() => this.name)
-    prop("code")
-      .useDeserializer<string>((data) => this.code = data ?? "")
-      .useSerializer<string>(() => this.code)
-    prop("population")
-      .useDeserializer<number>((data) => this.population = data ?? 0)
-      .useSerializer<number>(() => this.population)
+    prop<string>("name")
+      .useDeserializer((data) => this.name = data ?? "")
+      .useSerializer(() => this.name)
+    prop<string>("code")
+      .useDeserializer((data) => this.code = data ?? "")
+      .useSerializer(() => this.code)
+    prop<number>("population")
+      .useDeserializer((data) => this.population = data ?? 0)
+      .useSerializer(() => this.population)
   }
 }
 ```

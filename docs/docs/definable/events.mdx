@@ -36,10 +36,10 @@ class MyFirstClass extends Definable {
     })
   //highlight-end
 
-    prop("myFirstProperty")
-      .useSerializer<string>(() => this.myFirstProperty)
+    prop<string>("myFirstProperty")
+      .useSerializer(() => this.myFirstProperty)
       // data will have the type "string | null"
-      .useDeserializer<string>((data) => this.myFirstProperty = data ?? "")
+      .useDeserializer((data) => this.myFirstProperty = data ?? "")
   }
   
 }

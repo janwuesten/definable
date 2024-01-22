@@ -46,7 +46,7 @@ class MyFirstClass extends Definable {
   
   //highlight-start
   definition({ prop }: DefinableDefinition): void {
-    prop("myFirstProperty")
+    prop<string>("myFirstProperty")
   }
   //highlight-end
 }
@@ -64,11 +64,11 @@ class MyFirstClass extends Definable {
   myFirstProperty: string = ""
 
   definition({ prop }: DefinableDefinition): void {
-    prop("myFirstProperty")
+    prop<string>("myFirstProperty")
     //highlight-start
-      .useSerializer<string>(() => this.myFirstProperty)
+      .useSerializer(() => this.myFirstProperty)
       // data will have the type "string | null"
-      .useDeserializer<string>((data) => this.myFirstProperty = data ?? "")
+      .useDeserializer((data) => this.myFirstProperty = data ?? "")
     //highlight-end
   }
   

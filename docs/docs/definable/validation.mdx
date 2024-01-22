@@ -24,9 +24,9 @@ class Country extends Definable {
   code: string = ""
 
   definition({ prop }: DefinableDefinition): void {
-    prop("code")
-      .useDeserializer<string>((data) => this.code = data ?? "")
-      .useSerializer<string>(() => this.code)
+    prop<string>("code")
+      .useDeserializer((data) => this.code = data ?? "")
+      .useSerializer(() => this.code)
   }
 }
 ```
@@ -41,7 +41,7 @@ class Country extends Definable {
   code: string = ""
 
   definition({ prop }: DefinableDefinition): void {
-    prop("code")
+    prop<string>("code")
       //highlight-start
       .useValidator(() => {
         if (!this.code) {
@@ -53,8 +53,8 @@ class Country extends Definable {
         return null
       })
       //highlight-end
-      .useDeserializer<string>((data) => this.code = data ?? "")
-      .useSerializer<string>(() => this.code)
+      .useDeserializer((data) => this.code = data ?? "")
+      .useSerializer(() => this.code)
   }
 }
 ```
