@@ -5,31 +5,31 @@ class Mayor extends Definable {
   firstName: string = ""
   lastName: string = ""
 
-  definition({ prop, event }: DefinableDefinition): void {
-    prop("firstName")
-      .useDeserializer<string>((data) => this.firstName = data ?? "")
-      .useSerializer<string>(() => this.firstName)
-    prop("lastName")
-      .useDeserializer<string>((data) => this.lastName = data ?? "")
-      .useSerializer<string>(() => this.lastName)
+  definition({ prop }: DefinableDefinition): void {
+    prop<string>("firstName")
+      .useDeserializer((data) => this.firstName = data ?? "")
+      .useSerializer(() => this.firstName)
+    prop<string>("lastName")
+      .useDeserializer((data) => this.lastName = data ?? "")
+      .useSerializer(() => this.lastName)
   }
 }
 class City extends Definable {
   name: string = ""
 
   definition({ prop }: DefinableDefinition): void {
-    prop("name")
-      .useDeserializer<string>((data) => this.name = data ?? "")
-      .useSerializer<string>(() => this.name)
+    prop<string>("name")
+      .useDeserializer((data) => this.name = data ?? "")
+      .useSerializer(() => this.name)
   }
 }
 class Manager extends Definable {
   admin: boolean = false
 
   definition({ prop }: DefinableDefinition): void {
-    prop("admin")
-      .useDeserializer<boolean>((data) => this.admin = data ?? false)
-      .useSerializer<boolean>(() => this.admin)
+    prop<boolean>("admin")
+      .useDeserializer((data) => this.admin = data ?? false)
+      .useSerializer(() => this.admin)
   }
 }
 class Country extends Definable {
@@ -39,21 +39,21 @@ class Country extends Definable {
   manager: Map<string, Manager> = new Map()
 
   definition({ prop }: DefinableDefinition): void {
-    prop("name")
-      .useDeserializer<string>((data) => this.name = data ?? "")
-      .useSerializer<string>(() => this.name)
-    prop("cities")
+    prop<string>("name")
+      .useDeserializer((data) => this.name = data ?? "")
+      .useSerializer(() => this.name)
+    prop<City[]>("cities")
       .useDefinableArray(() => new City())
-      .useDeserializer<City[]>((data) => this.cities = data ?? [])
-      .useSerializer<City[]>(() => this.cities)
-    prop("mayor")
+      .useDeserializer((data) => this.cities = data ?? [])
+      .useSerializer(() => this.cities)
+    prop<Mayor>("mayor")
       .useDefinable(() => new Mayor())
-      .useDeserializer<Mayor>((data) => this.mayor = data ?? new Mayor())
-      .useSerializer<Mayor>(() => this.mayor)
-    prop("manager")
+      .useDeserializer((data) => this.mayor = data ?? new Mayor())
+      .useSerializer(() => this.mayor)
+    prop<Map<string, Manager>>("manager")
       .useDefinableMap(() => new Manager())
-      .useDeserializer<Map<string, Manager>>((data) => this.manager = data ?? new Map())
-      .useSerializer<Map<string, Manager>>(() => this.manager)
+      .useDeserializer((data) => this.manager = data ?? new Map())
+      .useSerializer(() => this.manager)
   }
 }
 

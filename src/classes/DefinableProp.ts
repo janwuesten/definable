@@ -19,7 +19,7 @@ export class DefinablePropParser<T extends BaseDefinable> {
     this.construct = construct
   }
 }
-export class DefinableProp {
+export class DefinableProp<T> {
   private __propertieName: string
   private __serializer: DefinablePropSerializer<any> | null = null
   private __validator: DefinablePropValidator | null = null
@@ -30,11 +30,11 @@ export class DefinableProp {
     this.__propertieName = propertieName
   }
 
-  useSerializer<T>(serializer: DefinablePropSerializer<T>) {
+  useSerializer(serializer: DefinablePropSerializer<T>) {
     this.__serializer = serializer
     return this
   }
-  useDeserializer<T>(deserializer: DefinablePropDeserializer<T>) {
+  useDeserializer(deserializer: DefinablePropDeserializer<T>) {
     this.__deserializer = deserializer
     return this
   }

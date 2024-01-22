@@ -5,9 +5,9 @@ class BaseClass extends Definable {
   testProp: string = ""
   
   definition({ prop }: DefinableDefinition): void {
-    prop("testProp")
-      .useSerializer<string>(() => this.testProp)
-      .useDeserializer<string>((data) => this.testProp = data ?? "")
+    prop<string>("testProp")
+      .useSerializer(() => this.testProp)
+      .useDeserializer((data) => this.testProp = data ?? "")
   }
 }
 class ExtendedClass extends BaseClass {

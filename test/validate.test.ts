@@ -6,18 +6,18 @@ class Country extends Definable {
   code: string = ""
 
   definition({ prop }: DefinableDefinition): void {
-    prop("name")
-      .useDeserializer<string>((data) => this.name = data ?? "")
-      .useSerializer<string>(() => this.name)
-    prop("code")
+    prop<string>("name")
+      .useDeserializer((data) => this.name = data ?? "")
+      .useSerializer(() => this.name)
+    prop<string>("code")
       .useValidator(() => {
         if (!this.code) {
           return "code-must-be-set"
         }
         return null
       })
-      .useDeserializer<string>((data) => this.code = data ?? "")
-      .useSerializer<string>(() => this.code)
+      .useDeserializer((data) => this.code = data ?? "")
+      .useSerializer(() => this.code)
   }
 }
 test("validate props", async () => {

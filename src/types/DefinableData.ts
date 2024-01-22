@@ -1,1 +1,3 @@
-export type DefinableData = Record<string, unknown>
+export type DefinableData = {
+  [key: string]: unknown
+}

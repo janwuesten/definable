@@ -2,7 +2,7 @@ import { DefinableProp } from "./DefinableProp"
 import { DefinableData } from "../types/DefinableData"
 import { DefinableEvent, DefinableEventListener, DefinableEventName } from "./DefinableEvent"
 
-export type DefinableDefinitionUseDefine = (field: string) => DefinableProp
+export type DefinableDefinitionUseDefine = <T>(field: string) => DefinableProp<T>
 export type DefinableDefinitionevent = (event: DefinableEventName, listener: DefinableEventListener) => DefinableEvent
 export type DefinableDefinition = {
   prop: DefinableDefinitionUseDefine
@@ -22,7 +22,7 @@ export type DefinableValidateResponse = {} & (
   | { valid: false, code: string, prop: string }
 )
 export abstract class BaseDefinable {
-  protected _propDefinitions: DefinableProp[] = []
+  protected _propDefinitions: DefinableProp<any>[] = []
   protected _propEvents: DefinableEvent[] = []
 
   abstract definition({ prop }: DefinableDefinition): void
