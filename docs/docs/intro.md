@@ -20,12 +20,12 @@ class Country extends Definable {
   countryCode: string = ""
 
   definition({ prop }: DefinableDefinition): void {
-    prop("name")
-      .useDeserializer<string>((data) => this.name = data ?? "")
-      .useSerializer<string>(() => this.name)
-    prop("countryCode")
-      .useDeserializer<string>((data) => this.countryCode = data ?? "")
-      .useSerializer<string>(() => this.countryCode)
+    prop<string>("name")
+      .useDeserializer((data) => this.name = data ?? "")
+      .useSerializer(() => this.name)
+    prop<string>("countryCode")
+      .useDeserializer((data) => this.countryCode = data ?? "")
+      .useSerializer(() => this.countryCode)
   }
 }
 
@@ -126,9 +126,9 @@ class City extends Definable {
   }
 
   definition({ prop }: DefinableDefinition): void {
-    prop("name")
-      .useDeserializer<string>((data) => this.name = data ?? "")
-      .useSerializer<string>(() => this.name)
+    prop<string>("name")
+      .useDeserializer((data) => this.name = data ?? "")
+      .useSerializer(() => this.name)
   }
 }
 // highlight-end
@@ -140,23 +140,23 @@ class Country extends Definable {
   // highlight-end
 
   definition({ prop }: DefinableDefinition): void {
-    prop("name")
-      .useDeserializer<string>((data) => this.name = data ?? "")
-      .useSerializer<string>(() => {
+    prop<string>("name")
+      .useDeserializer((data) => this.name = data ?? "")
+      .useSerializer(() => {
         // highlight-start
         if (!this.name)
           throw new Error("name cannot be empty")
         // highlight-end
         return this.name
       })
-    prop("code")
-      .useDeserializer<string>((data) => this.code = data ?? "")
-      .useSerializer<string>(() => this.code)
+    prop<string>("code")
+      .useDeserializer((data) => this.code = data ?? "")
+      .useSerializer(() => this.code)
     // highlight-start
-    prop("cities")
+    prop<City[]>("cities")
       .useDefinableArray(() => new City())
-      .useDeserializer<City[]>((data) => this.cities = data ?? [])
-      .useSerializer<City[]>(() => this.cities)
+      .useDeserializer((data) => this.cities = data ?? [])
+      .useSerializer(() => this.cities)
     // highlight-end
   }
 }
