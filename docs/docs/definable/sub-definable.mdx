@@ -1,0 +1,105 @@
+---
+sidebar_position: 4
+---
+
+# Sub-Definable
+
+When using Objects as properties, it is possible to also serialize and deserialize them into Definable classes.
+While this could be done manually with the base `useSerializer` serializer or `useDeserializer` deserializer, but Definable offers easy to use helper methods for this.
+
+## Single Definable
+
+To serialize and deserialize a single Definable propertie, simply add `useDefinable()` to your prop definition.
+The method `useDefinable` requires a method as a parameter that returns a new object of your `Definable` class.
+
+```ts
+class City extends Definable {
+  name: string = ""
+  isCapital: boolean = false
+
+  definition({ prop }: DefinableDefinition): void {
+    prop<string>("name")
+      .useDeserializer((data) => this.name = data ?? "")
+      .useSerializer(() => this.name)
+    prop<boolean>("isCapital")
+      .useDeserializer((data) => this.isCapital = data ?? false)
+      .useSerializer(() => this.isCapital)
+  }
+}
+class Country extends Definable {
+  capital: City | null = null
+
+  definition({ prop }: DefinableDefinition): void {
+    prop<City | null>("capital")
+      .useDefinable(() => new City())
+      .useDeserializer((data) => this.capital = data ?? null)
+      .useSerializer(() => this.capital)
+  }
+}
+```
+:::note
+By using `useDefinable`, the `data` parameter inside the `useDeserializer` Method already is a `Definable` object.
+Also using `useDefinable` allows you to directly return a `Definable` within the `useSerializer` method.
+:::
+
+
+## Definable array
+
+Using an `Definable` array as a propertie is similar to using a single `Definable` propertie. Simply replace `useDefinable` with `useDefinableArray` and you will get a array of `Definable`s.
+
+```ts
+class City extends Definable {
+  name: string = ""
+  isCapital: boolean = false
+
+  definition({ prop }: DefinableDefinition): void {
+    prop<string>("name")
+      .useDeserializer((data) => this.name = data ?? "")
+      .useSerializer(() => this.name)
+    prop<boolean>("isCapital")
+      .useDeserializer((data) => this.isCapital = data ?? false)
+      .useSerializer(() => this.isCapital)
+  }
+}
+class Country extends Definable {
+  cities: City[] = []
+
+  definition({ prop }: DefinableDefinition): void {
+    prop<City[]>("cities")
+      .useDefinableArray(() => new City())
+      .useDeserializer((data) => this.cities = data ?? [])
+      .useSerializer(() => this.cities)
+  }
+}
+```
+
+
+## Definable map
+
+Using an `Definable` map as a propertie is similar to using a single `Definable` propertie. Simply replace `useDefinable` with `useDefinableMap` and you will get a map of `Definable`s.
+
+```ts
+class City extends Definable {
+  name: string = ""
+  isCapital: boolean = false
+
+  definition({ prop }: DefinableDefinition): void {
+    prop<string>("name")
+      .useDeserializer((data) => this.name = data ?? "")
+      .useSerializer(() => this.name)
+    prop<boolean>("isCapital")
+      .useDeserializer((data) => this.isCapital = data ?? false)
+      .useSerializer(() => this.isCapital)
+  }
+}
+class Country extends Definable {
+  cities: Map<string, City> = new Map()
+
+  definition({ prop }: DefinableDefinition): void {
+    prop<Map<string, City>>("cities")
+      .useDefinableMap(() => new City())
+      .useDeserializer((data) => this.cities = data ?? [])
+      .useSerializer(() => this.cities)
+  }
+}
+```
