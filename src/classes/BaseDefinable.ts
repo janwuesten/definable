@@ -12,7 +12,7 @@ interface SerializeDeserializeOptions {
   props?: string[]
 }
 export interface DeserializeOptions extends SerializeDeserializeOptions {
-  
+  reference?: string | null
 }
 export interface SerializeOptions extends SerializeDeserializeOptions {
 
@@ -24,6 +24,7 @@ export type DefinableValidateResponse = {} & (
 export abstract class BaseDefinable {
   protected _propDefinitions: DefinableProp<any>[] = []
   protected _propEvents: DefinableEvent[] = []
+  reference: string | null = null
 
   abstract definition({ prop }: DefinableDefinition): void
   
@@ -58,13 +59,14 @@ export abstract class BaseDefinable {
         }
       }
     }
+    this.reference = options.reference ?? null
     const afterEvents = this._propEvents.filter((event) => event._eventName == "deserialize.after")
     for (const event of afterEvents) {
       event._listener()
     }
     return this
   }
-  serialize(options: DeserializeOptions = {}): DefinableData {
+  serialize(options: SerializeOptions = {}): DefinableData {
     const validateResponse = this.validate()
     if (!validateResponse.valid) {
       throw new Error(validateResponse.code)
