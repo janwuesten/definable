@@ -1,0 +1,85 @@
+---
+sidebar_position: 1
+---
+
+# Firestore
+
+:::tip
+Using Definable with Firebase Firestore is slightly different depending if you use Firestore for Web, Admin SDK or React Native.
+Always make sure to follow the official Firebase Firestore documentation to better understand how to use Firestore in general.
+This documentation only focuses on the usage of Firestore for Web in combination with Definable, as using Definable in any other scenario is not much different.
+:::
+
+## Example Definable
+
+The following `Definable` class is the class used for all following examples.
+This example class also shows how to use `Timestamp`.
+
+```ts
+import { Definable, DefinableDefinition } from "definable"
+import { Timestamp } from "firebase/firestore"
+
+export class Event extends Definable {
+  eventName: string = ""
+  from: Date = new Date()
+  to: Date = new Date()
+
+  definition({ prop }: DefinableDefinition): void {
+    prop<string>("eventName")
+      .useDeserializer((data) => this.eventName = data ?? "")
+      .useSerializer(() => this.eventName)
+    prop<Timestamp>("from")
+      .useDeserializer((data) => this.from = data?.toDate() ?? new Date())
+      .useSerializer(() => Timestamp.fromDate(this.from))
+    prop<Timestamp>("to")
+      .useDeserializer((data) => this.to = data?.toDate() ?? new Date())
+      .useSerializer(() => Timestamp.fromDate(this.to))
+  }
+}
+```
+
+## Reading a single document
+
+```ts
+import { collection, doc, getDoc } from "firebase/firestore"
+
+const collectionRef = collection(firestore, "event")
+const documentRef = doc(collectionRef, "my-event-id")
+const responseDocument = await getDoc(documentRef)
+
+// TODO: Check if document exists
+const event = new Event().deserialize(responseDocument.data(), { reference: responseDocument.id })
+
+// To read (or set) the document ID:
+const documentID = event.reference
+```
+
+## Reading multiple documents (query, getDocs...)
+
+```ts
+import { collection, doc, getDocs } from "firebase/firestore"
+
+const events: Event[] = []
+const collectionRef = collection(firestore, "event")
+const response = await getDocs(collectionRef)
+for (const doc of response.docs) {
+  events.push(new Event().deserialize(doc.data(), { reference: doc.id }))
+}
+console.log(events)
+```
+
+## Writing a document
+```ts
+import { collection, doc, addDoc, updateDoc } from "firebase/firestore"
+
+const collectionRef = collection(firestore, "event")
+
+const event = new Event()
+
+// Adding document
+const response = await addDoc(collectionRef, event.serialize())
+event.reference = test.id
+
+// Setting or updating document
+await updateDoc(doc(collectionRef, event.reference), event.serialize())
+```
