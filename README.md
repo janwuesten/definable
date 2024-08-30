@@ -41,9 +41,3 @@ const country = new Country().deserialize({
 
 const dataToStore = country.serialize()
 ```
-
-## Extensions
-
-Definable offers official extensions to use definable with different services.
-
-- `defineable-firestore`: use definable with your Google Firebase Firestore database to serialize your Firestore documents to JavaScript classes (coming soon).
